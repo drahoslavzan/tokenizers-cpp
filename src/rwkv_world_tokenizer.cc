@@ -83,16 +83,15 @@ class RWKVWorldTokenizer : public Tokenizer {
     _tree = std::make_unique<TrieTree>(_word2idx);
   }
 
-  std::vector<int32_t> Encode(const std::string_view& str) final {
-    std::vector<int> ids;
+  void Encode(const std::string_view& str, std::vector<int32_t>& ids) final {
     size_t str_idx = 0;
 
+    ids.clear();
     while (str_idx < str.size()) {
       auto [prefix, token_id] = _tree->find_longest_prefix(str.substr(str_idx));
       ids.push_back(token_id);
       str_idx += prefix.size();
     }
-    return ids;
   }
 
   std::string Decode(const std::vector<int32_t>& ids) final {
