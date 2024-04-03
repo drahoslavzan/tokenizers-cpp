@@ -23,11 +23,11 @@ struct TrieTree {
     }
   }
 
-  std::pair<std::string, int> find_longest_prefix(const std::string& str) const {
+  std::pair<std::string, int> find_longest_prefix(const std::string_view& str) const {
     std::string prefix;
     int token_id = -1;
     const TrieTree* node = this;
-    for (int i = 0; i < str.size(); ++i) {
+    for (size_t i = 0; i < str.size(); ++i) {
       auto it = node->children.find(str[i]);
       if (it == node->children.end()) {
         break;
@@ -83,9 +83,9 @@ class RWKVWorldTokenizer : public Tokenizer {
     _tree = std::make_unique<TrieTree>(_word2idx);
   }
 
-  std::vector<int32_t> Encode(const std::string& str) final {
+  std::vector<int32_t> Encode(const std::string_view& str) final {
     std::vector<int> ids;
-    int str_idx = 0;
+    size_t str_idx = 0;
 
     while (str_idx < str.size()) {
       auto [prefix, token_id] = _tree->find_longest_prefix(str.substr(str_idx));

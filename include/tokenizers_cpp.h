@@ -27,7 +27,7 @@ class Tokenizer {
    * \param text The input text.
    * \returns The encoded token ids.
    */
-  virtual std::vector<int32_t> Encode(const std::string& text) = 0;
+  virtual std::vector<int32_t> Encode(const std::string_view& text) = 0;
 
   /*!
    * \brief Decode token ids into text.

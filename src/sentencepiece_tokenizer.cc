@@ -16,7 +16,7 @@ class SentencePieceTokenizer : public Tokenizer {
     sentence_piece_.LoadFromSerializedProto(model_blob);
   }
 
-  std::vector<int32_t> Encode(const std::string& text) final {
+  std::vector<int32_t> Encode(const std::string_view& text) final {
     std::vector<int32_t> tokens;
     sentence_piece_.Encode(text, &tokens).IgnoreError();
     return tokens;
