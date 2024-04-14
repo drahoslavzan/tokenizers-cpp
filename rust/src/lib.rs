@@ -135,10 +135,21 @@ extern "C" fn tokenizers_encode(
     input_cstr: *const u8,
     len: usize,
     add_special_tokens: i32,
-) {
+) -> usize {
     unsafe {
-        let input_data = std::str::from_utf8(std::slice::from_raw_parts(input_cstr, len)).unwrap();
-        (*handle).encode(input_data, add_special_tokens != 0);
+        let special = add_special_tokens != 0;
+        match std::str::from_utf8(std::slice::from_raw_parts(input_cstr, len)) {
+            Ok(s) => {
+                (*handle).encode(s, special);
+                len
+            }
+            Err(e) => {
+                let n = e.valid_up_to();
+                let s = std::str::from_utf8_unchecked(std::slice::from_raw_parts(input_cstr, n));
+                (*handle).encode(s, special);
+                n
+            }
+        }
     }
 }
 

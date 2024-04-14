@@ -27,15 +27,16 @@ class HFTokenizer : public Tokenizer {
   }
 
   // use i32 to be consistent with sentencepiece
-  void Encode(const std::string_view& text, std::vector<int32_t>& ids) final {
+  size_t Encode(const std::string_view& text, std::vector<int32_t>& ids) final {
     bool add_special_token = false;
-    tokenizers_encode(handle_, text.data(), text.length(), static_cast<int>(add_special_token));
+    auto n = tokenizers_encode(handle_, text.data(), text.length(), static_cast<int>(add_special_token));
     const uint32_t* data;
     size_t len;
     tokenizers_get_encode_ids(handle_, &data, &len);
     const int32_t* data_i32 = reinterpret_cast<const int32_t*>(data);
 
     ids.assign(data_i32, data_i32 + len);
+    return n;
   }
 
   // use i32 to be consistent with sentencepiece
